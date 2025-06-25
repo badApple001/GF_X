@@ -22,6 +22,7 @@
 	<assembly fullname="UnityEngine.UIModule" preserve="all" />
 	<assembly fullname="UnityEngine.UnityWebRequestModule" preserve="all" />
 	<assembly fullname="UnityGameFramework.Runtime" preserve="all" />
+	<assembly fullname="ZString" preserve="all" />
 	<!--GENERATE_TAG-->
 	<!--<assembly fullname="UnityEngine">
 		<type fullname="UnityEngine.Vector2Int" preserve="all"/>

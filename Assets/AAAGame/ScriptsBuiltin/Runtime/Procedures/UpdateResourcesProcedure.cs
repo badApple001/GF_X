@@ -107,6 +107,7 @@ public class UpdateResourcesProcedure : ProcedureBase
     //向服务器发送请求获取版本信息 进行版本更新检测
     void CheckVersion()
     {
+
         if (GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.Updatable || GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.UpdatableWhilePlaying)
         {
             Log.Info("当前为热更新模式, Web请求最新版本号...");
@@ -119,6 +120,7 @@ public class UpdateResourcesProcedure : ProcedureBase
         {
             GFBuiltin.Resource.InitResources(OnResInitComplete);
         }
+
     }
     private void OnWebRequestSuccess(object sender, GameEventArgs e)
     {

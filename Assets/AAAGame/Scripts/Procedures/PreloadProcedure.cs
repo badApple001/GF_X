@@ -70,6 +70,8 @@ public class PreloadProcedure : ProcedureBase
         //{
         //    GF.Setting.SetABTestGroup("B");//设置A/B测试组; 应由服务器分配该新用户所属测试组
         //}
+        
+        //GF.Setting.SetABTestGroup
     }
     /// <summary>
     /// 预加载完成之后需要处理的事情

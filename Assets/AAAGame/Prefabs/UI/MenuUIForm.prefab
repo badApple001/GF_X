@@ -990,7 +990,7 @@ RectTransform:
   m_GameObject: {fileID: 9106242313546674708}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8921855033912200440}
@@ -1001,7 +1001,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7749117303418430994
 Canvas:
   m_ObjectHideFlags: 0
@@ -1043,8 +1043,8 @@ MonoBehaviour:
     - {fileID: 2418609679904308443}
     VarType: TMPro.TextMeshProUGUI
     VarPrefix: 0
-  topBar: {fileID: 5324967232595930154}
+  m_UIAnimationType: 0
   m_OpenAnimation: {fileID: 0}
   m_CloseAnimation: {fileID: 0}
-  showLvSwitch: 0
-  moneyText: {fileID: 6340830591993899600}
+  m_OpenAnimationName: 
+  m_CloseAnimationName: 

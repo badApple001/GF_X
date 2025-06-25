@@ -10,7 +10,7 @@ public class LaunchProcedure : ProcedureBase
     {
         base.OnEnter(procedureOwner);
         this.InitSettings();
-        ChangeState(procedureOwner, GFBuiltin.Base.EditorResourceMode ? typeof(LoadHotfixDllProcedure) : typeof(UpdateResourcesProcedure));
+        ChangeState( procedureOwner, GFBuiltin.Base.EditorResourceMode ? typeof(LoadHotfixDllProcedure) : typeof(UpdateResourcesProcedure));
     }
 
     private void InitSettings()
