@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.All)]
 public class GFBuiltin : MonoBehaviour
 {
     public static GFBuiltin Instance { get; private set; }
@@ -43,7 +44,7 @@ public class GFBuiltin : MonoBehaviour
                 var resTp = resCom.GetType();
                 var m_ResourceMode = resTp.GetField("m_ResourceMode", BindingFlags.Instance | BindingFlags.NonPublic);
                 m_ResourceMode.SetValue(resCom, AppSettings.Instance.ResourceMode);
-                GFBuiltin.LogInfo($"------------Set ResourceMode:{AppSettings.Instance.ResourceMode}------------");
+                GFBuiltin.Log($"------------Set ResourceMode:{AppSettings.Instance.ResourceMode}------------");
             }
         }
     }
@@ -82,10 +83,9 @@ public class GFBuiltin : MonoBehaviour
         CanvasScaler canvasScaler = RootCanvas.GetComponent<CanvasScaler>();
         canvasScaler.referenceResolution = AppSettings.Instance.DesignResolution;
         var designRatio = canvasScaler.referenceResolution.x / (float)canvasScaler.referenceResolution.y;
-        var canvasFitMode = Screen.width / (float)Screen.height > designRatio ? ScreenFitMode.Height : ScreenFitMode.Width;
         canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        canvasScaler.matchWidthOrHeight = (int)canvasFitMode;
-        GFBuiltin.LogInfo($"----------UI适配模式:{canvasFitMode}----------");
+        canvasScaler.matchWidthOrHeight = Screen.width / (float)Screen.height > designRatio ? 1 : 0;
+        GFBuiltin.Log($"----------UI适配Match:{canvasScaler.matchWidthOrHeight}----------");
     }
 
 
@@ -98,7 +98,7 @@ public class GFBuiltin : MonoBehaviour
         GameEntry.Shutdown(type);
     }
 
-    public static void LogInfo(string format)
+    public static void Log(string format)
     {
         var colorfulFormat = $"<color=#2BD988>{format}</color>";
         Debug.Log(colorfulFormat);

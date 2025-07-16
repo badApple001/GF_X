@@ -1,3 +1,4 @@
+#if DOTWEEN
 using DG.Tweening;
 using System;
 using UnityEngine;
@@ -560,17 +561,19 @@ public class SequenceTweenMoveDrawer : PropertyDrawer
 }
 #endregion
 #endif
+[Obfuz.ObfuzIgnore]
 public class DOTweenSequence : MonoBehaviour
 {
     [HideInInspector][SerializeField] SequenceAnimation[] m_Sequence;
     [SerializeField] bool m_PlayOnAwake = false;
+    [SerializeField] bool m_ResetOnAwake = false;
     [SerializeField] float m_Delay = 0;
     [SerializeField] Ease m_Ease = Ease.OutQuad;
     [SerializeField] int m_Loops = 1;
     [SerializeField] LoopType m_LoopType = LoopType.Restart;
     [SerializeField] UpdateType m_UpdateType = UpdateType.Normal;
 
-    [SerializeField] bool m_IgnoreTimeScale = false;
+    [SerializeField] bool m_IgnoreTimeScale = true;
     [SerializeField] UnityEvent m_OnPlay = null;
     [SerializeField] UnityEvent m_OnUpdate = null;
     [SerializeField] UnityEvent m_OnComplete = null;
@@ -578,11 +581,14 @@ public class DOTweenSequence : MonoBehaviour
     private Tween m_Tween;
     private void Awake()
     {
-        InitTween();
         if (m_PlayOnAwake) DOPlay();
+        else if (m_ResetOnAwake)
+        {
+            ResetToFromValue();
+        }
     }
 
-    private void InitTween()
+    private void ResetToFromValue()
     {
         foreach (var item in m_Sequence)
         {
@@ -753,6 +759,7 @@ public class DOTweenSequence : MonoBehaviour
                     Debug.LogErrorFormat("Tweener is null. Index:{0}, Animation Type:{1}, Component Type:{2}", i, item.AnimationType, item.Target == null ? "null" : item.Target.GetType().Name);
                     continue;
                 }
+                tweener.SetUpdate(!m_IgnoreTimeScale);
                 switch (item.AddType)
                 {
                     case AddType.Append:
@@ -775,6 +782,7 @@ public class DOTweenSequence : MonoBehaviour
                     Debug.LogErrorFormat("Tweener is null. Index:{0}, Animation Type:{1}, Component Type:{2}", i, item.AnimationType, item.Target == null ? "null" : item.Target.GetType().Name);
                     continue;
                 }
+                tweener.SetUpdate(!m_IgnoreTimeScale);
                 switch (item.AddType)
                 {
                     case AddType.Append:
@@ -819,7 +827,7 @@ public class DOTweenSequence : MonoBehaviour
         m_Tween?.Kill();
         m_Tween = null;
     }
-
+    [Serializable]
     public enum DOTweenType
     {
         DOMove,
@@ -1321,7 +1329,7 @@ public class DOTweenSequence : MonoBehaviour
                 if (Delay > 0) result.SetDelay(Delay);
                 if (CustomEase) result.SetEase(EaseCurve);
                 else result.SetEase(Ease);
-                
+
                 if (OnPlay != null) result.OnPlay(OnPlay.Invoke);
                 if (OnUpdate != null) result.OnUpdate(OnUpdate.Invoke);
                 if (OnComplete != null) result.OnComplete(OnComplete.Invoke);
@@ -1340,9 +1348,11 @@ public class DOTweenSequence : MonoBehaviour
             return (angle + 360) % 360;
         }
     }
+    [Serializable]
     public enum AddType
     {
         Append,
         Join
     }
 }
+#endif

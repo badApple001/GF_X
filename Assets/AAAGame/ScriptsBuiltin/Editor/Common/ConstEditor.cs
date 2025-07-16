@@ -10,6 +10,10 @@ namespace UGF.EditorTools
     public class ConstEditor
     {
         public const bool AutoScriptUTF8 = true;//新建脚本时自动修改脚本编码方式为utf-8以支持中文
+        /// <summary>
+        /// 打包资源前是否自动解决AB包重复依赖
+        /// </summary>
+        public const bool ResolveDuplicateAssets = true;
         public const string UIViewScriptFile = "Assets/AAAGame/Scripts/UI/Core/UIViews.cs";
         public const string UISerializeFieldDir = "Assets/AAAGame/Scripts/UI/UIVariables";//生成UI变量代码目录
         public const string UIItemSerializeFiledDir = "Assets/AAAGame/Scripts/UI/UIItemVariables";
@@ -36,13 +40,12 @@ namespace UGF.EditorTools
 
 
         public const string SharedAssetBundleName = "SharedAssets";//AssetBundle分包共用资源
-        public static readonly string[] DefaultLayers = { "UI" };
         internal static readonly string KeystorePass = "topgames";
         internal static readonly string KeyAliasPass = "topgames";
         internal static string KeystoreName => UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "user.keystore");
         internal static readonly string KeyAliasName = "release";
         internal static string AssetBundleOutputPath => UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AB");
-        public static readonly string UpdatePrefixUri = "https://gitcode.net/topgamesopen/gf_hybridclr_hotfix/-/raw/master";//默认资源下载地址
+        public static readonly string UpdatePrefixUri = "http://127.0.0.1/1_0_0_1/";//默认资源下载地址
         internal static readonly string AppUpdateUrl = "https://play.google.com/store/apps/details?id=";
 
         /// <summary>
@@ -63,8 +66,13 @@ namespace UGF.EditorTools
         public const string GameConfigPath = "Assets/AAAGame/Config";
         public const string LanguagePath = "Assets/AAAGame/Language";
         public const string DataTableCodePath = "Assets/AAAGame/Scripts/DataTable";
+        public const string UIScriptsPath = "Assets/AAAGame/Scripts/UI";
+        public const string UIItemScriptsPath = "Assets/AAAGame/Scripts/UI/Item";
         public const string UIFormTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIFormTemplate.prefab";
         public const string UIDialogTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIDialogTemplate.prefab";
+        public const string UIItemTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIItemTemplate.prefab";
+        public const string UIScriptFileTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIScriptFileTemplate.txt";
+        public const string UIItemScriptFileTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIItemScriptFileTemplate.txt";
     }
 }
 #endif

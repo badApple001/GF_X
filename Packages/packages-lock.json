@@ -5,7 +5,21 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "2414e77fefdd5d6fe44510437d2394eecaf989f0"
+      "hash": "59a3c3974a6e435e0ed57fb9af61fbbc6d17a8b7"
+    },
+    "com.code-philosophy.obfuz": {
+      "version": "https://gitee.com/focus-creative-games/obfuz.git#1.x",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "26b4828094f0604f5799c4b5b56214b58ff8f25e"
+    },
+    "com.code-philosophy.obfuz4hybridclr": {
+      "version": "https://gitee.com/focus-creative-games/obfuz4hybridclr.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "97be9b0709ba455eeb00d013546ac37fc421077f"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -14,7 +28,7 @@
       "dependencies": {}
     },
     "com.unity.ai.navigation": {
-      "version": "1.1.5",
+      "version": "1.1.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -23,7 +37,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.17",
+      "version": "1.8.21",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -49,15 +63,23 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collections": {
-      "version": "2.5.1",
+      "version": "2.5.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.8.17",
-        "com.unity.test-framework": "1.4.5",
-        "com.unity.nuget.mono-cecil": "1.11.4",
+        "com.unity.burst": "1.8.19",
+        "com.unity.mathematics": "1.3.2",
+        "com.unity.test-framework": "1.4.6",
+        "com.unity.nuget.mono-cecil": "1.11.5",
         "com.unity.test-framework.performance": "3.0.3"
       },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.device-simulator.devices": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {
@@ -68,11 +90,20 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.22",
+      "version": "2.0.23",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.inputsystem": {
+      "version": "1.14.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -86,14 +117,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
-      "version": "1.2.6",
+      "version": "1.3.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.mono-cecil": {
-      "version": "1.11.4",
+      "version": "1.11.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -107,7 +138,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "14.0.11",
+      "version": "14.0.12",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -124,8 +155,8 @@
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
         "com.unity.burst": "1.8.9",
-        "com.unity.render-pipelines.core": "14.0.11",
-        "com.unity.shadergraph": "14.0.11",
+        "com.unity.render-pipelines.core": "14.0.12",
+        "com.unity.shadergraph": "14.0.12",
         "com.unity.render-pipelines.universal-config": "14.0.9"
       }
     },
@@ -145,16 +176,16 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "14.0.11",
+      "version": "14.0.12",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "14.0.11",
+        "com.unity.render-pipelines.core": "14.0.12",
         "com.unity.searcher": "4.9.2"
       }
     },
     "com.unity.test-framework": {
-      "version": "1.4.5",
+      "version": "1.4.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {

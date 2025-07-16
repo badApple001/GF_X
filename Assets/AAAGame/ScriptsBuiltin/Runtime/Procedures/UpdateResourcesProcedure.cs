@@ -16,6 +16,7 @@ using ResourceVerifySuccessEventArgs = UnityGameFramework.Runtime.ResourceVerify
 using ResourceVerifyFailureEventArgs = UnityGameFramework.Runtime.ResourceVerifyFailureEventArgs;
 
 [Serializable]
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.All)]
 public class VersionInfo
 {
     public int InternalResourceVersion;//资源版本号
@@ -36,6 +37,7 @@ public class VersionInfo
 /// 1.如果是单机模式直接初始化资源
 /// 2.如果是热更新模式先检测更新再初始化资源
 /// </summary>
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class UpdateResourcesProcedure : ProcedureBase
 {
     private bool initComplete = false;
@@ -94,7 +96,7 @@ public class UpdateResourcesProcedure : ProcedureBase
 #if UNITY_64
             return "Windows64";
 #else
-            return "Windows";
+        return "Windows";
 #endif
 #elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
             return "MacOS";
@@ -107,11 +109,10 @@ public class UpdateResourcesProcedure : ProcedureBase
     //向服务器发送请求获取版本信息 进行版本更新检测
     void CheckVersion()
     {
-
         if (GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.Updatable || GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.UpdatableWhilePlaying)
         {
             Log.Info("当前为热更新模式, Web请求最新版本号...");
-            string verFileUrl = UtilityBuiltin.AssetsPath.GetCombinePath(ConstBuiltin.CheckVersionUrl, GetPlatformPath(), ConstBuiltin.VersionFile);
+            string verFileUrl = UtilityBuiltin.AssetsPath.GetCombinePath(AppSettings.Instance.CheckVersionUrl, GetPlatformPath(), ConstBuiltin.VersionFile);
             Log.Info("请求版本信息地址:{0}", verFileUrl);
             GFBuiltin.WebRequest.AddWebRequest(verFileUrl, this);
             GFBuiltin.BuiltinView.ShowLoadingProgress(0);
@@ -120,7 +121,6 @@ public class UpdateResourcesProcedure : ProcedureBase
         {
             GFBuiltin.Resource.InitResources(OnResInitComplete);
         }
-
     }
     private void OnWebRequestSuccess(object sender, GameEventArgs e)
     {
@@ -130,7 +130,7 @@ public class UpdateResourcesProcedure : ProcedureBase
             return;
         }
         var webText = Utility.Converter.GetString(arg.GetWebResponseBytes());
-        GFBuiltin.LogInfo($"最新资源版本信息:{webText}");
+        GFBuiltin.Log($"最新资源版本信息:{webText}");
         var vinfo = Utility.Json.ToObject<VersionInfo>(webText);
         CheckVersionList(vinfo);
     }
@@ -168,21 +168,21 @@ public class UpdateResourcesProcedure : ProcedureBase
     private void CheckVersionAndUpdate(VersionInfo vinfo)
     {
         GFBuiltin.Resource.UpdatePrefixUri = UtilityBuiltin.AssetsPath.GetCombinePath(vinfo.UpdatePrefixUri);
-        GFBuiltin.LogInfo($"资源服务器地址:{GFBuiltin.Resource.UpdatePrefixUri}");
+        GFBuiltin.Log($"资源服务器地址:{GFBuiltin.Resource.UpdatePrefixUri}");
         CheckVersionListResult checkResult;
         if (CheckResourceApplicable(vinfo.ApplicableGameVersion))
         {
             checkResult = GFBuiltin.Resource.CheckVersionList(vinfo.InternalResourceVersion);
-            GFBuiltin.LogInfo($"是否存需要更新资源:{checkResult}");
+            GFBuiltin.Log($"是否存需要更新资源:{checkResult}");
         }
         else
         {
-            GFBuiltin.LogInfo("资源不适用当前客户端版本, 已跳过更新");
+            GFBuiltin.Log("资源不适用当前客户端版本, 已跳过更新");
             checkResult = GFBuiltin.Resource.CheckVersionList(GFBuiltin.Resource.InternalResourceVersion);
         }
         if (checkResult == GameFramework.Resource.CheckVersionListResult.NeedUpdate)
         {
-            GFBuiltin.LogInfo("更新资源列表文件...");
+            GFBuiltin.Log("更新资源列表文件...");
             var updateVersionCall = new UpdateVersionListCallbacks(OnUpdateVersionListSuccess, OnUpdateVersionListFailed);
             GFBuiltin.Resource.UpdateVersionList(vinfo.VersionListLength, vinfo.VersionListHashCode, vinfo.VersionListCompressedLength, vinfo.VersionListCompressedHashCode, updateVersionCall);
         }
@@ -227,7 +227,7 @@ public class UpdateResourcesProcedure : ProcedureBase
         }
         else
         {
-            Log.Info<int,long,string>("需要更新资源个数:{0},资源大小:{1},下载地址:{2}", updateCount, updateTotalZipLength, GFBuiltin.Resource.UpdatePrefixUri);
+            Log.Info<int, long, string>("需要更新资源个数:{0},资源大小:{1},下载地址:{2}", updateCount, updateTotalZipLength, GFBuiltin.Resource.UpdatePrefixUri);
             GFBuiltin.Resource.UpdateResources(OnUpdateResourceComplete);
         }
     }
@@ -264,7 +264,7 @@ public class UpdateResourcesProcedure : ProcedureBase
         ResourceUpdateFailureEventArgs ne = (ResourceUpdateFailureEventArgs)e;
         if (ne.RetryCount >= ne.TotalRetryCount)
         {
-            Log.Error<string,string,string,int>("Download '{0}' failure from '{1}' with error message '{2}', retry count '{3}'.", ne.Name, ne.DownloadUri, ne.ErrorMessage, ne.RetryCount);
+            Log.Error<string, string, string, int>("Download '{0}' failure from '{1}' with error message '{2}', retry count '{3}'.", ne.Name, ne.DownloadUri, ne.ErrorMessage, ne.RetryCount);
             return;
         }
         else
@@ -359,7 +359,7 @@ public class UpdateResourcesProcedure : ProcedureBase
     {
         initComplete = true;
 
-        GFBuiltin.LogInfo("All Resource Completed!");
+        GFBuiltin.Log("All Resource Completed!");
     }
     private class DownloadProgressData
     {

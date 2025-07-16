@@ -11,8 +11,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
-[System.Reflection.Obfuscation(Feature = "renaming", ApplyToMembers = false)]
+#if ENABLE_OBFUZ
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
+#endif
 /// <summary>
 /// CombatUnitTable
 /// </summary>
@@ -81,15 +82,6 @@ public class CombatUnitTable : DataRowBase
             private set;
         }
 
-        /// <summary>
-        /// 浮点数值
-        /// </summary>
-        public float TestFloat
-        {
-            get;
-            private set;
-        }
-
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -108,7 +100,6 @@ public class CombatUnitTable : DataRowBase
             Hp = int.Parse(columnStrings[index++]);
             Damage = int.Parse(columnStrings[index++]);
             MaxAttackCount = int.Parse(columnStrings[index++]);
-            TestFloat = float.Parse(columnStrings[index++]);
 
             return true;
         }
@@ -126,12 +117,9 @@ public class CombatUnitTable : DataRowBase
                     Hp = binaryReader.Read7BitEncodedInt32();
                     Damage = binaryReader.Read7BitEncodedInt32();
                     MaxAttackCount = binaryReader.Read7BitEncodedInt32();
-                    TestFloat = binaryReader.ReadSingle();
                 }
             }
 
             return true;
         }
-
-//__DATA_TABLE_PROPERTY_ARRAY__
 }

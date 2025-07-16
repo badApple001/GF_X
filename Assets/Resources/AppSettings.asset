@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugMode: 1
   ResourceMode: 2
+  CheckVersionUrl: http://localhost/1_0_0_1/
   DesignResolution: {x: 1080, y: 2340}
+  EncryptAOTDlls:
+  - Builtin.Runtime
+  - UnityGameFramework.Runtime

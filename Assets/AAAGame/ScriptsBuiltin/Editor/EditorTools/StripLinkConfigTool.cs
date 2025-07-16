@@ -20,7 +20,11 @@ namespace UGF.EditorTools
         public static string[] GetProjectAssemblyDlls()
         {
             List<string> dlls = new List<string>();
+#if DISABLE_HYBRIDCLR
+            var dllDir = HybridCLRExtensionTool.GetStripAssembliesDir(EditorUserBuildSettings.activeBuildTarget);
+#else
             var dllDir = HybridCLR.Editor.SettingsUtil.GetAssembliesPostIl2CppStripDir(EditorUserBuildSettings.activeBuildTarget);
+#endif
             if (!Directory.Exists(dllDir))
             {
                 return dlls.ToArray();
@@ -126,6 +130,7 @@ namespace UGF.EditorTools
         {
             HybridCLR.Editor.Settings.HybridCLRSettings.Instance.patchAOTAssemblies = strings;
             HybridCLRExtensionTool.CopyAotDllsToProject(EditorUserBuildSettings.activeBuildTarget);
+            HybridCLR.Editor.Settings.HybridCLRSettings.Save();
             AssetDatabase.Refresh();
             return true;
         }

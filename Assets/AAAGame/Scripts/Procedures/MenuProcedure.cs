@@ -1,15 +1,17 @@
-﻿using GameFramework;
-using GameFramework.Event;
+﻿using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using UnityEngine;
 using UnityGameFramework.Runtime;
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class MenuProcedure : ProcedureBase
 {
     int menuUIFormId;
     LevelEntity lvEntity;
 
     IFsm<IProcedureManager> procedure;
+    private GameFramework.Network.INetworkChannel m_MainNetChannel;
+
     protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
     {
         base.OnInit(procedureOwner);
@@ -19,10 +21,22 @@ public class MenuProcedure : ProcedureBase
         base.OnEnter(procedureOwner);
         procedure = procedureOwner;
         ShowLevel();//加载关卡
-        //var res = await GF.WebRequest.AddWebRequestAsync("https://blog.csdn.net/final5788");
-        //Log.Info(Utility.Converter.GetString(res.Bytes));
+                    //var res = await GF.WebRequest.AddWebRequestAsync("https://blog.csdn.net/final5788");
+                    //Log.Info(Utility.Converter.GetString(res.Bytes));
+
+        //连接服务器
+        //var netHelper = new StarForce.NetworkChannelHelper();
+        //m_MainNetChannel = GF.Network.CreateNetworkChannel("Main", GameFramework.Network.ServiceType.TcpWithSyncReceive, netHelper);
+        //m_MainNetChannel.Connect(System.Net.IPAddress.Parse("127.0.0.1"), 10000);
+
+        GF.Event.Subscribe(EnterGameEventArgs.EventId, OnEnterGameEvent);
     }
 
+    private void OnNetworkConnected(object sender, GameEventArgs e)
+    {
+        var args = e as NetworkConnectedEventArgs;
+        Log.Info($">>>>>>>>>>>>>>>OnNetworkConnected:{args.NetworkChannel.Name}");
+    }
     protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
@@ -30,11 +44,12 @@ public class MenuProcedure : ProcedureBase
         {
             return;
         }
-        //点击屏幕开始游戏
-        if (Input.GetMouseButtonDown(0) && !GF.UI.IsPointerOverUIObject(Input.mousePosition) && GF.UI.GetTopUIFormId() == menuUIFormId)
-        {
-            EnterGame();
-        }
+
+        // //点击屏幕开始游戏
+        // if (Input.GetMouseButtonDown(0) && !GF.UI.IsPointerOverUIObject(Input.mousePosition) && GF.UI.GetTopUIFormId() == menuUIFormId)
+        // {
+        //     EnterGame();
+        // }
     }
     protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
     {
@@ -43,6 +58,8 @@ public class MenuProcedure : ProcedureBase
             GF.UI.CloseUIForm(menuUIFormId);
         }
         base.OnLeave(procedureOwner, isShutdown);
+
+        GF.Event.Unsubscribe(EnterGameEventArgs.EventId, OnEnterGameEvent);
     }
     public void EnterGame()
     {
@@ -74,4 +91,12 @@ public class MenuProcedure : ProcedureBase
         lvEntity = await GF.Entity.ShowEntityAwait<LevelEntity>(lvRow.LvPfbName, Const.EntityGroup.Level, lvParams) as LevelEntity;
         GF.BuiltinView.HideLoadingProgress();
     }
+
+
+
+    private void OnEnterGameEvent(object sender, GameEventArgs e)
+    {
+        EnterGame();
+    }
+
 }

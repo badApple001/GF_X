@@ -16,6 +16,7 @@ using Cysharp.Threading.Tasks;
 using UnityEditor.Build;
 using System.Xml;
 using UGF.EditorTools.ResourceTools;
+using Obfuz.Unity;
 
 namespace UGF.EditorTools
 {
@@ -40,6 +41,7 @@ namespace UGF.EditorTools
         private GUIContent buildAppBtContent;
         private GUIContent saveBtContent;
         private GUIContent playerSettingBtContent;
+        private GUIContent appSettingBtContent;
         private GUIContent hybridclrSettingBtContent;
         private Vector2 scrollPosition;
         private GUIStyle dropDownBtStyle;
@@ -66,6 +68,7 @@ namespace UGF.EditorTools
             buildAppBtContent = EditorGUIUtility.TrTextContentWithIcon("Build App", "打新包,首次打热更包请使用Full Build", "UnityLogo");
 
             playerSettingBtContent = EditorGUIUtility.TrTextContentWithIcon("Player Settings", "打开Player Settings界面", "Settings");
+            appSettingBtContent = EditorGUIUtility.TrTextContentWithIcon("App Settings", "打开App Settings界面", "Settings");
             hybridclrSettingBtContent = EditorGUIUtility.TrTextContentWithIcon("Hotfix Settings", "打开HybridCLR Settings界面", "Settings");
             saveBtContent = EditorGUIUtility.TrTextContentWithIcon("Save", "保存设置", "SaveAs@2x");
 
@@ -80,7 +83,6 @@ namespace UGF.EditorTools
             {
                 AssetDatabase.CreateAsset(CreateInstance<AppSettings>(), "Assets/Resources/AppSettings.asset");
             }
-            RefreshHybridCLREnable();
 
             m_Controller = new ResourceBuilderController();
             m_Controller.OnLoadingResource += OnLoadingResource;
@@ -137,6 +139,9 @@ namespace UGF.EditorTools
             {
                 SetResourceMode(AppSettings.Instance.ResourceMode);
             }
+
+            RefreshHybridCLREnable();
+            RefreshObfuzEnable();
         }
 
         private void Update()
@@ -276,7 +281,7 @@ namespace UGF.EditorTools
                 {
                     EditorGUILayout.LabelField("Build Resources Settings", EditorStyles.boldLabel);
                     AppBuildSettings.Instance.UseResourceRule = EditorGUILayout.ToggleLeft("Enable [Rule Editor]", AppBuildSettings.Instance.UseResourceRule, GUILayout.Width(160));
-                    if(AppBuildSettings.Instance.UseResourceRule && GUILayout.Button("Rule Editor", GUILayout.Width(160)))
+                    if (AppBuildSettings.Instance.UseResourceRule && GUILayout.Button("Rule Editor", GUILayout.Width(160)))
                     {
                         ResourceRuleEditor.Open();
                         GUIUtility.ExitGUI();
@@ -294,6 +299,18 @@ namespace UGF.EditorTools
                     {
                         EditorGUILayout.LabelField("Force Rebuild AssetBundle", GUILayout.Width(160f));
                         m_Controller.ForceRebuildAssetBundleSelected = EditorGUILayout.Toggle(m_Controller.ForceRebuildAssetBundleSelected);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Enable Obfuz", GUILayout.Width(160f));
+                        EditorGUI.BeginChangeCheck();
+                        Obfuz.Settings.ObfuzSettings.Instance.enable = EditorGUILayout.Toggle(Obfuz.Settings.ObfuzSettings.Instance.enable);
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            RefreshObfuzEnable();
+                            Obfuz.Settings.ObfuzSettings.Save();
+                        }
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
@@ -458,7 +475,21 @@ namespace UGF.EditorTools
                 }
             }
         }
-
+        private void RefreshObfuzEnable()
+        {
+            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            {
+#if !ENABLE_OBFUZ
+                HybridCLRExtensionTool.EnableObfuz();
+#endif
+            }
+            else
+            {
+#if ENABLE_OBFUZ
+                HybridCLRExtensionTool.DisableObfuz();
+#endif
+            }
+        }
         private void RefreshHybridCLREnable()
         {
             if (AppSettings.Instance.ResourceMode != ResourceMode.Unspecified)
@@ -571,6 +602,10 @@ namespace UGF.EditorTools
 #endif
                 EditorUserBuildSettings.development = EditorGUILayout.ToggleLeft("Development Build", EditorUserBuildSettings.development);
                 AppSettings.Instance.DebugMode = EditorGUILayout.ToggleLeft("Debug Mode", AppSettings.Instance.DebugMode);
+                if (GUILayout.Button(appSettingBtContent))
+                {
+                    Selection.activeObject = AppSettings.Instance;
+                }
                 if (GUILayout.Button(playerSettingBtContent))
                 {
                     SettingsService.OpenProjectSettings("Project/Player");
@@ -618,11 +653,6 @@ namespace UGF.EditorTools
                         AppBuildSettings.Instance.AndroidKeystoreName = PlayerSettings.Android.keystoreName = EditorGUILayout.TextField(AppBuildSettings.Instance.AndroidKeystoreName);
                         if (GUILayout.Button("Select Keystore", GUILayout.Width(160f)))
                         {
-
-                            //string projectRoot = Directory.GetParent(Application.dataPath).FullName;
-                            //var keystoreDir = string.IsNullOrWhiteSpace(AppBuildSettings.Instance.AndroidKeystoreName) ? projectRoot : Path.GetDirectoryName(AppBuildSettings.Instance.AndroidKeyAliasName);
-                            //var openPath = Directory.Exists(keystoreDir) ? keystoreDir : projectRoot;
-                            //string path = EditorUtility.OpenFilePanel("Select Keystore", openPath, "keystore,jks,ks");
                             string path = EditorUtilityExtension.OpenRelativeFilePanel("Select Keystore", AppBuildSettings.Instance.AndroidKeystoreName, "keystore,jks,ks");
                             if (!string.IsNullOrWhiteSpace(path))
                             {
@@ -657,7 +687,7 @@ namespace UGF.EditorTools
                     EditorGUILayout.EndHorizontal();
                 }
 
-#elif UNITY_IOS          
+#elif UNITY_IOS
                 EditorGUILayout.BeginHorizontal();
                 {
                     EditorGUILayout.LabelField("Build Number", GUILayout.Width(160f));
@@ -665,7 +695,7 @@ namespace UGF.EditorTools
                 }
                 EditorGUILayout.EndHorizontal();
 #endif
-                    }
+            }
             EditorGUILayout.EndVertical();
         }
         private void DrawHotfixConfigPanel()
@@ -889,6 +919,12 @@ namespace UGF.EditorTools
             {
                 throw new BuildFailedException($"You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
             }
+            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            {
+                ObfuzMenu.GenerateEncryptionVM();
+                ObfuzMenu.SaveSecretFile();
+            }
+
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
             HybridCLRExtensionTool.CompileTargetDll(false);
             Il2CppDefGeneratorCommand.GenerateIl2CppDef();
@@ -899,9 +935,8 @@ namespace UGF.EditorTools
             {
                 // 生成裁剪后的aot dll
                 StripAOTDllCommand.GenerateStripedAOTDlls(target);
-                HybridCLRExtensionTool.CopyAotDllsToProject(target);
             }
-
+            HybridCLRExtensionTool.CopyAotDllsToProject(target);
             // 桥接函数生成依赖于AOT dll，必须保证已经build过，生成AOT dll
             MethodBridgeGeneratorCommand.GenerateMethodBridgeAndReversePInvokeWrapper(target);
             AOTReferenceGeneratorCommand.GenerateAOTGenericReference(target);
@@ -1010,6 +1045,7 @@ namespace UGF.EditorTools
         {
             EditorUtility.SetDirty(AppSettings.Instance);
             AppBuildSettings.Save();
+            EditorUtility.SetDirty(Obfuz.Settings.ObfuzSettings.Instance);
             if (m_Controller.Save())
             {
                 Debug.Log("Save configuration success.");

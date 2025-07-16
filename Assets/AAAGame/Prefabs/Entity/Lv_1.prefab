@@ -870,7 +870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_UnitFlag: 1
-  m_RowCol: {x: 15, y: 10}
+  m_RowCol: {x: 32, y: 10}
   m_PosPadding: {x: 1.5, y: 1.5}
   m_CombatUnitId: 1
   m_TriggerBounds: {x: 130, y: 50}

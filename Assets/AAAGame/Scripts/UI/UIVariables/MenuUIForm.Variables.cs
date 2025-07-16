@@ -1,12 +1,15 @@
-//---------------------------------
+﻿//---------------------------------
 //此文件由工具自动生成,请勿手动修改
-//更新自:NPC-20230705ZXI
+//更新自:DESKTOP-NU8E691
 //---------------------------------
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
+namespace Game
+{
 public partial class MenuUIForm
 {
 	[Space(10)]
 	[Header("UI Variables:")]
-	[SerializeField] private TextMeshProUGUI moneyText = null;
+	[SerializeField] protected Button varBtn_Start = null;
+}
 }

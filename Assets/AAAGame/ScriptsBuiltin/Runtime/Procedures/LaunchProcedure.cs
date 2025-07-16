@@ -3,14 +3,14 @@ using GameFramework.Procedure;
 using UnityGameFramework.Runtime;
 using GameFramework.Fsm;
 using System.Globalization;
-
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class LaunchProcedure : ProcedureBase
 {
     protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
     {
         base.OnEnter(procedureOwner);
         this.InitSettings();
-        ChangeState( procedureOwner, GFBuiltin.Base.EditorResourceMode ? typeof(LoadHotfixDllProcedure) : typeof(UpdateResourcesProcedure));
+        ChangeState(procedureOwner, GFBuiltin.Base.EditorResourceMode ? typeof(LoadHotfixDllProcedure) : typeof(UpdateResourcesProcedure));
     }
 
     private void InitSettings()

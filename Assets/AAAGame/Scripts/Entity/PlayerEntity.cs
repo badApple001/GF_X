@@ -39,7 +39,7 @@ public class PlayerEntity : CombatUnitEntity
 
     Action m_OnPlayerBeKilled = null;
     float m_HandIkWeight, m_IkSmooth = 10f;
-    Vector3[] m_SmoothHandIkPoints;//Ë«ÊÖIK Points
+    Vector3[] m_SmoothHandIkPoints;//Ë«ï¿½ï¿½IK Points
     CombatUnitEntity[] m_AttackTargets;
     Vector3[] m_HandTargetPoints;
 
@@ -114,9 +114,9 @@ public class PlayerEntity : CombatUnitEntity
         if (!Ctrlable) return;
         isGrounded = characterCtrl.isGrounded;
 
-        Move(elapseSeconds);//ÒÆ¶¯
+        Move(elapseSeconds);//ï¿½Æ¶ï¿½
         AttackLogicUpdate(elapseSeconds);
-        //Jump(elapseSeconds);//ÌøÔ¾
+        //Jump(elapseSeconds);//ï¿½ï¿½Ô¾
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -134,7 +134,7 @@ public class PlayerEntity : CombatUnitEntity
 
     private void AttackLogicUpdate(float elapseSeconds)
     {
-        //Ë¢ÐÂ¹¥»÷Ä¿±ê
+        //Ë¢ï¿½Â¹ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
         var nearestTargets = JobsPhysics.OverlapSphereNearest(CampFlag, HandPoints, CombatUnitRow.AttackRadius, CombatUnitRow.MaxAttackCount);
         RefreshTargets(nearestTargets, true);
         if (m_AttackTargets[0] != null && (m_AttackTimer += elapseSeconds) > m_AttackInterval)
