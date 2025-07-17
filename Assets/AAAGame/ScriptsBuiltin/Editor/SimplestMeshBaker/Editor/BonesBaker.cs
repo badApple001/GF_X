@@ -20,7 +20,7 @@ namespace SimplestMeshBaker
 
         private static List<Transform> bonesToRemove;
         
-        [MenuItem("GameObject/Bake Bones", false, 0)]
+        [MenuItem("GameObject/SkinnedMesh Tool//Bake Bones", false, 0)]
         static void BakeBones(MenuCommand menuCommand)
         {
             //Prevent executing multiple times

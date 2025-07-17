@@ -24,7 +24,7 @@ namespace SimplestMeshBaker
 
         private static int objectNum;
 
-        [MenuItem("GameObject/Bake Meshes", false, 0)]
+        [MenuItem("GameObject/Mesh Tool/Bake Meshes", false, 0)]
         private static void BakeMeshes(MenuCommand menuCommand)
         {
 
