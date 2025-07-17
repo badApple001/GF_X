@@ -45,8 +45,10 @@ public class LevelEntity : EntityBase
         playerParams.Set(PlayerEntity.P_DataTableRow, playerRow);
         playerParams.Set<VarInt32>(PlayerEntity.P_CombatFlag, (int)CombatUnitEntity.CombatFlag.Player);
         playerParams.Set<VarAction>(PlayerEntity.P_OnBeKilled, (Action)OnPlayerBeKilled);
+
         m_PlayerEntity = await GF.Entity.ShowEntityAwait<PlayerEntity>(playerRow.PrefabName, Const.EntityGroup.Player, playerParams) as PlayerEntity;
         CameraController.Instance.SetFollowTarget(m_PlayerEntity.CachedTransform);
+
         IsAllReady = true;
     }
 
@@ -99,7 +101,7 @@ public class LevelEntity : EntityBase
     }
     private void CheckGameOver()
     {
-        if(m_IsGameOver) return;
+        if (m_IsGameOver) return;
         if (m_Spawnners.Count < 1 && m_EntityLoadingList.Count < 1 && m_Enemies.Count < 1)
         {
             m_IsGameOver = true;

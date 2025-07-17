@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -23,7 +23,7 @@ namespace SimplestMeshBaker
         private static Resolving uvResolving;
 
         private static int objectNum;
-        
+
         [MenuItem("GameObject/Bake Meshes", false, 0)]
         private static void BakeMeshes(MenuCommand menuCommand)
         {
@@ -32,6 +32,7 @@ namespace SimplestMeshBaker
             {
                 return;
             }
+
             //Prevent executing multiple times
             if (Selection.objects.Length > 1)
             {
@@ -40,7 +41,7 @@ namespace SimplestMeshBaker
                     return;
                 }
             }
-            
+
             List<Vector3> vertexes = new List<Vector3>();
             List<Vector3> normals = new List<Vector3>();
             List<Vector4> tangents = new List<Vector4>();
@@ -95,7 +96,7 @@ namespace SimplestMeshBaker
                     tangents.Clear();
                     colors.Clear();
                     uvs.Clear();
-                    triangles.Clear();                    
+                    triangles.Clear();
                 }
             }
             else
@@ -151,6 +152,7 @@ namespace SimplestMeshBaker
             }
             EditorUtility.DisplayDialog("Simplest Mesh Baker",
                 "Baked " + meshesCount + " meshes.", "Cool!");
+            AssetDatabase.Refresh();
         }
 
         private static bool FillDataAndCheckResolving(Dictionary<Material, List<Mesh>> meshesWithMaterials, List<Mesh> meshesWithoutMaterials)
@@ -165,9 +167,9 @@ namespace SimplestMeshBaker
             bool anyHasNotColors = false;
             bool anyHasNotNormals = false;
             bool anyHasNotUVs = false;
-            
+
             HashSet<Transform> transforms = new HashSet<Transform>();
-            
+
             foreach (GameObject selected in Selection.gameObjects)
             {
                 MeshFilter[] meshFilters = selected.GetComponentsInChildren<MeshFilter>();
@@ -186,7 +188,7 @@ namespace SimplestMeshBaker
                     Mesh mesh = Instantiate(meshFilter.sharedMesh);
                     HandleMesh(meshesWithMaterials, meshesWithoutMaterials, mesh, meshFilter.transform, material, transforms, ref anyHasNotNormals, ref anyHasNotColors, ref anyHasNotUVs, ref anyHasNormals, ref anyHasColors, ref anyHasUVs);
                 }
-                
+
                 SkinnedMeshRenderer[] skinnedMeshRenderers = selected.GetComponentsInChildren<SkinnedMeshRenderer>();
                 foreach (var skinnedMeshRenderer in skinnedMeshRenderers)
                 {
@@ -211,7 +213,7 @@ namespace SimplestMeshBaker
         {
             mesh.vertices = mesh.vertices.Select(transform.TransformPoint).ToArray();
             mesh.normals = mesh.normals.Select(transform.TransformDirection).ToArray();
-            
+
             if (material == null)
             {
                 meshesWithoutMaterials.Add(mesh);
@@ -224,7 +226,7 @@ namespace SimplestMeshBaker
                 }
                 else
                 {
-                    meshesWithMaterials.Add(material, new List<Mesh>() {mesh});
+                    meshesWithMaterials.Add(material, new List<Mesh>() { mesh });
                 }
             }
             transforms.Add(transform);
@@ -300,9 +302,19 @@ namespace SimplestMeshBaker
             newMesh.SetTriangles(triangles, 0);
             mf.sharedMesh = newMesh;
             mr.material = material;
+
+
+            // 保存到本地
+            string path = $"Assets/BakedMeshs/BakedMesh_{objectNum}.asset";
+            //创建Bake目录
+            if (!Directory.Exists("Assets/BakedMeshs"))
+                Directory.CreateDirectory("Assets/BakedMeshs");
+            AssetDatabase.CreateAsset(newMesh, path);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Save Bake mesh: " + path);
         }
 
-        private static void Bake(Mesh mesh, List<Vector3> vertexes, List<Vector3> normals, List<Vector4> tangents, 
+        private static void Bake(Mesh mesh, List<Vector3> vertexes, List<Vector3> normals, List<Vector4> tangents,
             List<Color> colors, List<Vector2> uvs, List<int> triangles, Material material)
         {
             //mesh may not have more than 65000 vertices.

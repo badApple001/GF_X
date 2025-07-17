@@ -83,6 +83,7 @@
     <Compile Include="Assets\AAAGame\Scripts\Entity\Core\EntityParams.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Procedures\PreloadProcedure.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\ToastTips.Variables.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Common\RuntimeMeshCombiner.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Entity\BulletEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\NewUIForm.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Network\PacketHeaderBase.cs" />
@@ -143,8 +144,10 @@
     <Compile Include="Assets\AAAGame\Scripts\UI\LanguageToggle.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataModel\TypeIdPair.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\TransformExtension.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Entity\Character\CharacterEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\Variable\VarVector3Array.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\RatingDialog.Variables.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Entity\Level\MapEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Common\CameraController.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Demo\SimpleJoystick.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\ShopUIForm.cs" />

@@ -32,10 +32,10 @@ public class GeneratePrefabCombinations : EditorWindow
 
     public List<RootBone> rootBone = new List<RootBone>();
 
-    [MenuItem("Tools/Prefab Tool/Generate Prefab Combinations")]
+    [MenuItem("Tools/Prefab Tool/将角色混合预设中的部位拆分出多个预制体")]
     public static void ShowWindow()
     {
-        GetWindow<GeneratePrefabCombinations>("Generate Prefab Combinations");
+        GetWindow<GeneratePrefabCombinations>("拆分角色窗口");
     }
 
     private void OnGUI()

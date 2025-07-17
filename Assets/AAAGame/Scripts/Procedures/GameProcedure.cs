@@ -23,11 +23,17 @@ public class GameProcedure : ProcedureBase
         GF.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
         GF.Event.Subscribe(CloseUIFormCompleteEventArgs.EventId, OnCloseUIForm);
         GF.Event.Subscribe(GameplayEventArgs.EventId, OnGameplayEvent);
-        m_Level = procedureOwner.GetData<VarUnityObject>("LevelEntity").Value as LevelEntity;
-        procedureOwner.RemoveData("LevelEntity");
 
+
+        // m_Level = procedureOwner.GetData<VarUnityObject>("LevelEntity").Value as LevelEntity;
+        // procedureOwner.RemoveData("LevelEntity");
+        //m_GameUI = await GF.UI.OpenUIFormAwait(UIViews.GameUIForm) as GameUIForm;
+        // m_Level.StartGame();
+
+        var mapEntity = procedureOwner.GetData<VarUnityObject>("MapEntity").Value as MapEntity;
+        procedureOwner.RemoveData("MapEntity");
         m_GameUI = await GF.UI.OpenUIFormAwait(UIViews.GameUIForm) as GameUIForm;
-        m_Level.StartGame();
+        mapEntity.StartGame();
     }
 
 
@@ -61,7 +67,7 @@ public class GameProcedure : ProcedureBase
     private void OnGameplayEvent(object sender, GameEventArgs e)
     {
         var args = e as GameplayEventArgs;
-        if(args.EventType == GameplayEventType.GameOver)
+        if (args.EventType == GameplayEventType.GameOver)
         {
             OnGameOver(args.Params.Get<VarBoolean>("IsWin"));
         }
